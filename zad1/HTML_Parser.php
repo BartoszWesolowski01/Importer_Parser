@@ -13,12 +13,11 @@
                             [@id="wo_number" or 
                             @id="po_number" or
                             @id="customer" or 
-                            @id="trade" or 
-                            @id="nte"]');
+                            @id="trade"]');
 
     $sheduled_date = $shtml->xpath('//*[@id="scheduled_date"]');
-    //print(date('Y-m-d H:i', strtotime("$sheduled_date[0] str_replace(' PM', '', $sheduled_date[0]->span")));
 
+    $nte = array(floatval(preg_replace('/\D/', '', (string)$shtml->xpath('//*[@id="nte"]')[0])));
 
     $date = new DateTime($sheduled_date[0]);
     $time = new DateTime($sheduled_date[0]->span);
@@ -36,14 +35,14 @@
     $state_number =  array(preg_replace('/[0-9]+/', '', str_replace($city[0], "", explode("\n", $address)[2])));
     $postal_code = array(filter_var(explode("\n", $address)[2], FILTER_SANITIZE_NUMBER_INT));
 
-    $phone = $shtml->xpath('//*[@id="location_phone"]');
+    $phone = array(floatval(str_replace("-", "", (string)$shtml->xpath('//*[@id="location_phone"]')[0])));
 
-    $location_details = array_merge($sheduled_date, $store_id, $city, $street, $state_number, $postal_code, $phone);
-    $items = array_merge($items, $location_details);
+    $merged_array = array_merge($nte, $sheduled_date, $store_id, $city, $street, $state_number, $postal_code, $phone);
+    $items = array_merge($items, $merged_array);
 
     $trimmed_array = array_map('trim', $items);
     $list = array (
-        array("Customer", "Trade", "NTE", "PO Number", "Tracking Number", "Scheduled Date", "Store ID", "City", "Street", "State", "Postal Code", "Phone Number"),
+        array("Customer", "Trade", "PO Number", "Tracking Number", "NTE", "Scheduled Date", "Store ID", "City", "Street", "State", "Postal Code", "Phone Number"),
         $trimmed_array
     );
     
