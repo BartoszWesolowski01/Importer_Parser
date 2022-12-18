@@ -111,7 +111,7 @@ class Importer extends Command
         
         $fp = fopen('php://output', 'wb');
         foreach ($list as $line) {
-            fputcsv($fp, $line, ',');
+            fputcsv($fp, $line, ';');
         }
 
         fclose($fp);
